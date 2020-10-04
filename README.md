@@ -49,4 +49,23 @@ input DQ
 return a 0/1 vector of important variables
 if o1=o2, returns a vector of 2s
 
+Degenerate(IntegerVector NRed, IntegerVector ENTRIES)
+//NRed - vector giving the domain sizes of Xs parents in order, then the domain size of X
+  // ENTRIES - the CPT(X) section of the CP-net entries vector
+  //Returns -1 if CPT(X) is non degenerate
+  // Returns i (integer between 0 and |Pa| -1) giving the index of a degenerate parent (if CPT is degenerate)
+  //Note that if we return that i is a degenerate parent, this does not mean that there aren't more degenerate parents
+  
+how we determine degen (theoretically), tho some easy cases
+Parental asst enumeration - use partials to dtermine total
+
+not consistent re variable enumeration tho always have to convert back to 0 indexing
+
+RemovePa(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, int PA, int CH)
+PA-CH is a degenerate edge we remove
+PA, CH must be indexed from 0
+Again using parent lex encodings to identify the right rows to extract more easily and cyclicng through is easier
+have to upd entries and breaks at the end
+
+
 update ref-> paper!
