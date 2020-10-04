@@ -30,7 +30,23 @@ SFDQ(A, N, ENTRIES, BREAK, o1, o2)
 RSDQRankPriority(A, N, ENTRIES, BREAK, o1, o2)
 RSDQRankDiffPriority(A, N, ENTRIES, BREAK, o1, o2)
 RPDQRankPriority(A, N, ENTRIES, BREAK, o1, o2)
+RPDQRankDiffPriority
+RPDQPenaltyPriority
+PSDQ
+RPSDQRankDiffPriority
+RPSDQRankPriority
+RPSDQPenaltyPriority
 
 return answer and OT
+
+NumericalCheck(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+checks the three initial condition
+false - any 1 of them holds
+true - none hold (need to answer DQ, MIGHT be true)
+
+ImpVar(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+input DQ
+return a 0/1 vector of important variables
+if o1=o2, returns a vector of 2s
 
 update ref-> paper!
