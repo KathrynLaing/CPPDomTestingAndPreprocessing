@@ -67,5 +67,44 @@ PA, CH must be indexed from 0
 Again using parent lex encodings to identify the right rows to extract more easily and cyclicng through is easier
 have to upd entries and breaks at the end
 
+UvRemove(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+removes the unimportant variables
+then, for all CPTs that could now have degenerate parents, identifies if there are any and removes them
+assumes o1, o2 distinct
+using lex calculations not explained fully to gen certain types of asst from partial assts
+
+ConnectedComponents(IntegerMatrix A)
+takes a adj matrix, assumed to be acyclic
+returns an integer #connected components
+if >1 then also a matrix with 0/1 vectors of connected components
+didnt really explain WHY this method gives the CC
+
+UVRSAndRPSDQRankPriority(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+  //checks Are applied and if found false, DQFALSE is returned with 0 outcomes considered and start
+  //and end times
+  //Otherwise, once reduced it is separated into connected components. 
+  //Each subDQ (if >1) is tested at formation with numerical checks.
+  //If any found false DQFALSE is returned with 0 outcomes considered and start and end times
+  //If all pass this is the point at with DonePreProc Time is recorded.
+  //Each SubDQ is answered in order of increasing size. The outcomes considered each time are added on
+  //If any is false, proccess immediately stops and DQFALSE is returned with
+  //outcomes considered and time steps START, DONEPP, END
+  //If all are true then proccess returns DQTRUE with total outcomes considered and 
+  //time steps START, DONEPP, END
+  //Further, if the function gets past PP then the reduced #outcomes is output
+  
+ uses numerical checks and logs outcomes traversed and times and #outcomes as explained in thesis
+ using increasing size to order subCPN
+ 
+ 
+ ForwardPruning(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+  //This function applies forward pruning. It then removes all size 1 variables and normalises the remaining domains so
+  //that they are back to being enumerated 1,2,3,..
+  //OUTPUTS: - If any domain goes to 0 (automatic false) then outputs the variable of interest and the Domains vector 
+  //(pruned up to that point)
+  // -OTHERWISEit outputs the pruned domains matrix, the reduced (pruned, normalised, degeneracies rmvd) CPN and assoc reduced DQ
+  
+ForwardPruning(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+Mention WHY we have to normalise and get rid of 1 value variables
 
 update ref-> paper!
