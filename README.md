@@ -66,9 +66,9 @@ Functions starting with:
 
 The priority method is either specified in the function title (Rank, Rank + Diff, Penalty) except in the cases where only 1 prioritisation is possible (see DQ-Pruning or Thesis Chapter 2 for details).
 
-For each dominance testing function, we also have a corresponding timed version. For example, `RankDQRankPriority`
+For each dominance testing function, we also have a corresponding timed version. For example, `RankDQRankPriority` has the corresponding function `RankDQRankPriorityTimed`. This function takes the same input and simply applies `RankDQRankPriority` and records the time it takes to answer the query. This function then returns the answer of the query (true/false), the number of outcomes considered, and the start and end time of the function (allowing us to calculate time taken). These are the functions we used in our Chapter 2 experiments in order to evaluate time elapsed results as well.
 
-The following functions in `DQFunctions.cpp` are called by the dominance testing functions
+The following functions in `DQFunctions.cpp` are called within the dominance testing functions
 ```
 CPTRow(A, N, ENTRIES, BREAK, x, PA)
 Rank(A, N, ENTRIES, BREAK, o)
@@ -76,7 +76,12 @@ Penalty(A, N, ENTRIES, BREAK, o)
 RankDifferences(A, N, ENTRIES, BREAK)
 ```
 
-`Rank` and `Penalty`
+`CPTRow` takes a CP-net, a variable `x` (index between 1 and #variables), and `PA` a parental assignment to the parents of x (or 0 is x has no parents). This returns the row of CPT(X) that corresponds to this parental assignment (or just CPT(X) if x has no parents). See discussion of `ENTRIES` for what we mean by CPT row.
+
+`Rank` and `Penalty` both take a CP-net and outcome, `o`, as inputs. They return the rank of `o` and the penalty of `o` respectively. 
+
+`RankDifferences` takes a CP-net as input. It returns an n length vector (n=#variables). The ith element of this vector is the least rank improvement of variable i, L(i) (see thesis, section 2.4.1 for details).
+
 enumeration from 1 domains, variables
 
 lexicographic parent assts
