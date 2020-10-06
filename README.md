@@ -163,17 +163,16 @@ The function identifies which variables are important to this query. If o1 and o
 ```
 Degenerate(NRed, ENTRIES)
 ```
-//NRed - vector giving the domain sizes of Xs parents in order, then the domain size of X
-  // ENTRIES - the CPT(X) section of the CP-net entries vector
-  //Returns -1 if CPT(X) is non degenerate
-  // Returns i (integer between 0 and |Pa| -1) giving the index of a degenerate parent (if CPT is degenerate)
-  //Note that if we return that i is a degenerate parent, this does not mean that there aren't more degenerate parents
-  
-how we determine degen (theoretically), tho some easy cases
-Parental asst enumeration - use partials to dtermine total
+This function takes 2 vectors as inputs. NRed gives, for some variable X, the domain sizes of each parent of X (in order) followed by the domain size of X. ENTRIES gives the CPT(X) vector (the elements of the CP-net entries vector corresponding to CPT(X))
 
+It evaluates whether X has any degenerate parents. To do so, for each parent, Y, it cycles through (lexicographically) all possible assigments to the other parents. For each of these assignments, w, evaluate the preference rule over X under Pa(X)=uy for every possible value of Y (Pa(X)=uy meaning Y=y and all other parents are assigned their values in u). If changing Y only (fixing u) cal alter the preference rule over X, then Y is a non-degenerate parent. If this does not happen for *any* assignment u, then Y is degenerate. The function checks this condition for each parent until a degenerate parent is found or all parents are found to be non-degenerate (i.e. the CPT is non-degenerate). Note that in some cases, we can simplify this procedure (e.g. if X has no parents or only 1 parent) so we split the function up into different cases
 
-RemovePa(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, int PA, int CH)
+If the function finds no degenerate parents (i.e. the CPT is non-degenerate), then it returns `-1`. If it finds the ith parent of X (i is an index between 0 and (|Pa(X)|-1)) to be degenerate, then it return `i`. Note that returning `i` as a degenerate parent does not mean that all other parents are non-degenerate, there could be further invalid parents.
+```
+RemovePa(A, N, ENTRIES, BREAK, PA, CH)
+```
+This function takes a CP-net and two outcomes, `PA` and `CH` as inputs.
+
 PA-CH is a degenerate edge we remove
 PA, CH must be indexed from 0
 Again using parent lex encodings to identify the right rows to extract more easily and cyclicng through is easier
