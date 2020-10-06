@@ -68,6 +68,8 @@ The priority method is either specified in the function title (Rank, Rank + Diff
 
 For each dominance testing function, we also have a corresponding timed version. For example, `RankDQRankPriority` has the corresponding function `RankDQRankPriorityTimed`. This function takes the same input and simply applies `RankDQRankPriority` and records the time it takes to answer the query. This function then returns the answer of the query (true/false), the number of outcomes considered, and the start and end time of the function (allowing us to calculate time taken). These are the functions we used in our Chapter 2 experiments in order to evaluate time elapsed results as well.
 
+-------------------
+
 The following functions in `DQFunctions.cpp` are called within the dominance testing functions
 ```
 CPTRow(A, N, ENTRIES, BREAK, x, PA)
@@ -89,18 +91,6 @@ As we discussed above, parental assignments can be viewed as vectors and ordered
 ## Preprocessing Functions
 The `DQFunctions.cpp` gives the following functions which we use to apply and test preprocessing in our Chapter 3 experiments:
 ```
-UvRemove(A, N, ENTRIES, BREAK, o1, o2)
-```
-This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?". These outcomes, o1 and o2, must be distinct.
-
-The function removes all variables from the CP-net that are unimportant to the query in the manner we discuss in Chapter 3. Any variable that has a parent (or several) removed by this process has all remaining parents tested for degeneracy. Any degenerate parents are removed (that is, the parent-child edge is removed from the structure). The function then returns the reduced CP-net and dominance query
-```
-ConnectedComponents(A)
-```
-This function takes an adjacency matrix, A, which we assume to be acyclic. 
-
-The function obtains the connected components of A. It returns the number of connected components, k. If k>1, then it also returns a  kxn matrix (n=#variables), C. The ith row of C is a vector of 0s and 1s. the jth entry is 1 if and only if variable j is in the ith connected component. Note that there is no specific ordering of the connected components.
-```
 UVRSAndRPSDQRankPriority(A, N, ENTRIES, BREAK, o1, o2)
 ```
 This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?".
@@ -113,17 +103,11 @@ If the query is not answered by preprocessing, the function returns the answer o
 
 See thesis Chapter 3 experiments for explanation of outcomes traversed and reduced CP-net #outcomes calculations.
 ```
-ForwardPruning(A, N, ENTRIES, BREAK, o1, o2)
-```
-This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?".
-
-It applies forward pruning alonside numerical checks to the query as we describe in Chapter 3 (including the removal of variables with only 1 remaining value and degenerate edges). If forward pruning finds the query false, the function returns the index which had its domain pruned entirely and a matrix giving the pruned domains (up to the point of termination) of the variables. If forward pruning does not answer the query (find it false), then it returns a matrix giving the pruned domains of each variable and the reduced CP-net and query produced by forward pruning.
-```
 FPAndRPSDQRankPriority(A, N, ENTRIES, BREAK, o1, o2)
 ```
 This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?".
 
-This function applies forward pruning preprocessing to the dominance query alongside numerical checks, as described in the thesis Chapter 3 experiments. If the preprocessing does not answer the query, it uses function RPSDQRankPriority to answer the reduced dominance query.
+This function applies forward pruning preprocessing to the dominance query alongside numerical checks, as described in the thesis Chapter 3 experiments (including the removal of variables with only 1 remaining value and degenerate edges). If the preprocessing does not answer the query, it uses function RPSDQRankPriority to answer the reduced dominance query.
 
 If the query is answered at some point during preprocessing, the function terminates and returns the answer of the dominance query (true/false), the number of outcomes considered (0), and the timestamps of the start and end of the function.
 
@@ -142,6 +126,10 @@ If the query is answered at some point during preprocessing, the function termin
 If the query is not answered by preprocessing, the function returns the answer of the dominance query (true/false), the number of outcomes considered in dominance testing, the timestamps of the start of the function, end of preprocessing, and end of the function, and also the number of outcomes in the reduced CP-net(s).
 
 See thesis Chapter 3 experiments for explanation of outcomes traversed and reduced CP-net #outcomes calculations.
+
+------------
+In addition to these functions, `DQFunctions.cpp` also gives the following functions which are called by the preprocessing functions. They may also call soem of the functions from the previous section.
+
 ```
 NumericalCheck(A, N, ENTRIES, BREAK, o1, o2)
 ```
@@ -171,11 +159,29 @@ If the function finds no degenerate parents (i.e. the CPT is non-degenerate), th
 ```
 RemovePa(A, N, ENTRIES, BREAK, PA, CH)
 ```
-This function takes a CP-net and two outcomes, `PA` and `CH` as inputs.
+This function takes a CP-net and two variables, `PA` and `CH` as inputs. In this specific instance, we input the variables indexed from 0 not 1 (i.e. they are indices between 0 and (n-1) where n=#variables). PA->CH must be a degenerate edge in the input CP-net.
 
-PA-CH is a degenerate edge we remove
-PA, CH must be indexed from 0
-Again using parent lex encodings to identify the right rows to extract more easily and cyclicng through is easier
-have to upd entries and breaks at the end
+The function removes this degenerate edge from the structure and returns the reduced CP-net. 
+```
+UvRemove(A, N, ENTRIES, BREAK, o1, o2)
+```
+This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?". These outcomes, o1 and o2, must be distinct.
 
-Mention WHY we have to normalise and get rid of 1 value variables
+The function removes all variables from the CP-net that are unimportant to the query in the manner we discuss in Chapter 3. Any variable that has a parent (or several) removed by this process has all remaining parents tested for degeneracy. Any degenerate parents are removed (that is, the parent-child edge is removed from the structure). The function then returns the reduced CP-net and dominance query
+```
+ConnectedComponents(A)
+```
+This function takes an adjacency matrix, A, which we assume to be acyclic. 
+
+The function obtains the connected components of A. It returns the number of connected components, k. If k>1, then it also returns a  kxn matrix (n=#variables), C. The ith row of C is a vector of 0s and 1s. the jth entry is 1 if and only if variable j is in the ith connected component. Note that there is no specific ordering of the connected components.
+```
+ForwardPruning(A, N, ENTRIES, BREAK, o1, o2)
+```
+This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?".
+
+It applies forward pruning alonside numerical checks to the query as we describe in Chapter 3 (including the removal of variables with only 1 remaining value and degenerate edges). If forward pruning finds the query false, the function returns the index which had its domain pruned entirely and a matrix giving the pruned domains (up to the point of termination) of the variables. If forward pruning does not answer the query (find it false), then it returns a matrix giving the pruned domains of each variable and the reduced CP-net and query produced by forward pruning.
+
+
+---------------
+
+Note that whenever we alter a CP-net by removing outcomes or variable domain values, we normalise the structure before outputting it. That is, if we have variables {1,2,3,4} and remove variable 3, then the CP-net returned has variables {1,2,3} not {1,2,4}. Similarly for variable domain values. In general, after changing the structure, we must also adjust the domains, breaks, and entries vector so that the returned CP-net is in our C++ CP-net formal described above. This is to ensure that the CP-net can then be passed to our other functions without error.
