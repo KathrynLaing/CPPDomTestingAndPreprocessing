@@ -1,4 +1,24 @@
-# CPPDomTestingAndPreprocessing
+# C++ Dominance Testing and Preprocessing Functions
+
+This repository gives the code for the Chapter 2 and 3 experiments from my thesis:
+
+*Laing, K. (2020). Conditional Preference Networks: Efficient Dominance Testing and Learning. PhD Thesis. School of Mathematics, University of Leeds, UK.*
+
+In particular, C++ versions of the dominance testing functions (in R) given in my DQ-Pruning repository as well as CP-net preprocessing functions.
+
+All of these functions are given in the file `DQFunctions.cpp`. 
+
+These functions use the Rcpp package. Rcpp is a tool for integrating C++ and R, which means that these functions can be called directly from R if one uses the following preamble in the R script:
+```
+library(Rcpp)
+Sys.setenv("PKG_CXXFLAGS"="-std=c++0x")
+sourceCpp("DQFunctions.cpp")
+```
+As we are now using C++ rather than R, we had to develop a new encoding structure for CP-nets. We discuss this and how to move between this and the R encoding from the DQ-Pruning repository in the following section. We then discuss the updated (C++) dominance testing functions in the following section. In the final section, we discuss the prepocessing functions.
+
+## C++ CP-net Encoding
+
+
 
 We start by randomly generating a set of CP-nets and outcomes in the exact same way as in the DQ-Pruning repository. These are the dominance queries we wish to test. They are stored as .RData objects, as before.
 
