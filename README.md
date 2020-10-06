@@ -128,7 +128,7 @@ If the query is not answered by preprocessing, the function returns the answer o
 See thesis Chapter 3 experiments for explanation of outcomes traversed and reduced CP-net #outcomes calculations.
 
 ------------
-In addition to these functions, `DQFunctions.cpp` also gives the following functions which are called by the preprocessing functions. They may also call soem of the functions from the previous section.
+In addition to these functions, `DQFunctions.cpp` also gives the following functions which are called by the preprocessing functions. They may also call some of the functions from the previous section.
 
 ```
 NumericalCheck(A, N, ENTRIES, BREAK, o1, o2)
@@ -184,4 +184,4 @@ It applies forward pruning alonside numerical checks to the query as we describe
 
 ---------------
 
-Note that whenever we alter a CP-net by removing outcomes or variable domain values, we normalise the structure before outputting it. That is, if we have variables {1,2,3,4} and remove variable 3, then the CP-net returned has variables {1,2,3} not {1,2,4}. Similarly for variable domain values. In general, after changing the structure, we must also adjust the domains, breaks, and entries vector so that the returned CP-net is in our C++ CP-net formal described above. This is to ensure that the CP-net can then be passed to our other functions without error.
+Note that whenever we alter a CP-net by removing outcomes or variable domain values, we normalise the structure before outputting it. That is, if we have variables {1,2,3,4} and remove variable 3, then the CP-net returned has variables {1,2,3} not {1,2,4}. Similarly for variable domain values. In general, after changing the structure, we must also adjust the domains, breaks, and entries vector so that the returned CP-net is in our C++ CP-net format described above. This is to ensure that the CP-net can then be passed to our other functions without error.
