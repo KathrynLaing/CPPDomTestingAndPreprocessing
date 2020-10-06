@@ -103,23 +103,20 @@ The function obtains the connected components of A. It returns the number of con
 ```
 UVRSAndRPSDQRankPriority(A, N, ENTRIES, BREAK, o1, o2)
 ```
-  //checks Are applied and if found false, DQFALSE is returned with 0 outcomes considered and start
-  //and end times
-  //Otherwise, once reduced it is separated into connected components. 
-  //Each subDQ (if >1) is tested at formation with numerical checks.
-  //If any found false DQFALSE is returned with 0 outcomes considered and start and end times
-  //If all pass this is the point at with DonePreProc Time is recorded.
-  //Each SubDQ is answered in order of increasing size. The outcomes considered each time are added on
-  //If any is false, proccess immediately stops and DQFALSE is returned with
-  //outcomes considered and time steps START, DONEPP, END
-  //If all are true then proccess returns DQTRUE with total outcomes considered and 
-  //time steps START, DONEPP, END
-  //Further, if the function gets past PP then the reduced #outcomes is output
-  
- uses numerical checks and logs outcomes traversed and times and #outcomes as explained in thesis
- using increasing size to order subCPN
- 
- 
+This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?".
+
+This function applies UVRS preprocessing to the dominance query alongside numerical checks, as described in the thesis Chapter 3 experiments. If the preprocessing does not answer the query, it uses function RPSDQRankPriority to answer the reduced dominance query. If there are multiple reduced queries, then they are answered in increasing order of their corresponding #variables until an answer to the original query is found. 
+
+If the query is answered at some point during preprocessing, the function terminates and returns the answer of the dominance query (true/false), the number of outcomes considered (0), and the timestamps of the start and end of the function.
+
+If the query is answered by preprocessing, the function returns the answer of the dominance query (true/false), the number of outcomes considered in dominance testing, the timestamps of the start of the function, end of preprocessing, and end of the function, and also the number of outcomes in the UVRS reduced CP-net(s).
+
+See thesis Chapter 3 experiments for explanation of outcomes traversed and reduced CP-net #outcomes calculations.
+```
+ForwardPruning(A, N, ENTRIES, BREAK, o1, o2)
+```
+This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?".
+
  ForwardPruning(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
   //This function applies forward pruning. It then removes all size 1 variables and normalises the remaining domains so
   //that they are back to being enumerated 1,2,3,..
