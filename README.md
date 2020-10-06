@@ -34,24 +34,9 @@ M=CPNConvert(CPN)
 Function(M[[1]], M[[2]], M[[3]], M[[4]])
 ```
 
-
-CPTRow(A, N, ENTRIES, BREAK, x, PA)
-Rank(A, N, ENTRIES, BREAK, o)
-Penalty(A, N, ENTRIES, BREAK, o)
-RankDifferences(A, N, ENTRIES, BREAK)
-
-enumeration from 1 domains, variables
-
-using Rcpp objects
-
-lexicographic parent assts
-parental lex enumerations actually the same.... No its weird. Made to start at 1.. make sure other repo starts at 0 in example, weird conversion  
-
-CP-net form
-outcomes - vectors
-
-accurancy of ranks and encodings here is good enough for d<=5 and n<=20
-
+## Dominance Testing Functions:
+In `DQFunctions.cpp` We give the following functions, which are the C++ translation of the dominance testing functions given in the DQ-Pruning repository (see here for further details). These are the functions we use in the Chapter 2 experiments of my thesis.
+```
 RankDQRankPriority(A, N, ENTRIES, BREAK, o1, o2)
 RankDQRankDiffPriority(A, N, ENTRIES, BREAK, o1, o2)
 PenaltyDQ(A, N, ENTRIES, BREAK, o1, o2)
@@ -59,14 +44,45 @@ SFDQ(A, N, ENTRIES, BREAK, o1, o2)
 RSDQRankPriority(A, N, ENTRIES, BREAK, o1, o2)
 RSDQRankDiffPriority(A, N, ENTRIES, BREAK, o1, o2)
 RPDQRankPriority(A, N, ENTRIES, BREAK, o1, o2)
-RPDQRankDiffPriority
-RPDQPenaltyPriority
-PSDQ
-RPSDQRankDiffPriority
-RPSDQRankPriority
-RPSDQPenaltyPriority
+RPDQRankDiffPriority(A, N, ENTRIES, BREAK, o1, o2)
+RPDQPenaltyPriority(A, N, ENTRIES, BREAK, o1, o2)
+PSDQ(A, N, ENTRIES, BREAK, o1, o2)
+RPSDQRankDiffPriority(A, N, ENTRIES, BREAK, o1, o2)
+RPSDQRankPriority(A, N, ENTRIES, BREAK, o1, o2)
+RPSDQPenaltyPriority(A, N, ENTRIES, BREAK, o1, o2)
+```
+Each function takes a CP-net and two outcomes, `o1` and `o2`. This is asking the dominance query "Is `o1` preferred to `o2`?". Note that outcomes are formated as vectors, the same as in DQ-Pruning (R outcomes can be passed straight to C++ functions without conversion).
 
-return answer and OT
+The functions return the answer of the query (true/false) and the number of outcomes considered in the process of answering the query.
+
+Functions starting with:
+- `Rank` use rank pruning only
+- `Penalty` use penalty pruning only
+- `SF` use suffix fixing pruning only
+- `RS` use rank pruning and suffix fixing
+- `RP` use rank pruning and penalty pruning
+- `PS` use penalty pruning and suffix fixing
+- `RPS` use all three pruning methods
+
+The priority method is either specified in the function title (Rank, Rank + Diff, Penalty) except in the cases where only 1 prioritisation is possible (see DQ-Pruning or Thesis Chapter 2 for details).
+
+For each dominance testing function, we also have a corresponding timed version. For example, `RankDQRankPriority`
+
+The following functions in `DQFunctions.cpp` are called by the dominance testing functions
+```
+CPTRow(A, N, ENTRIES, BREAK, x, PA)
+Rank(A, N, ENTRIES, BREAK, o)
+Penalty(A, N, ENTRIES, BREAK, o)
+RankDifferences(A, N, ENTRIES, BREAK)
+```
+
+`Rank` and `Penalty`
+enumeration from 1 domains, variables
+
+lexicographic parent assts
+parental lex enumerations actually the same.... No its weird. Made to start at 1.. make sure other repo starts at 0 in example, weird conversion  
+
+## Preprocessing Functions
 
 NumericalCheck(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
 checks the three initial condition
