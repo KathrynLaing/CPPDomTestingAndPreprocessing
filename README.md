@@ -106,5 +106,17 @@ UVRSAndRPSDQRankPriority(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES
   
 ForwardPruning(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
 Mention WHY we have to normalise and get rid of 1 value variables
+output formats...
 
+FPAndRPSDQRankPriority(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+applies FP, answers queries
+outputs formated akin to ForwardPruning
+applying FP with numerical checks, as in thesis. Outcomes considered etc. defined as in thesis
+
+CombAndRPSDQRankPriority(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+diff to algorithm - thesis remark - add comment in function?
+outputs same form as above
+uses numerical checks too 
 update ref-> paper!
+
+RPSDQRankPriorityTimed etc
