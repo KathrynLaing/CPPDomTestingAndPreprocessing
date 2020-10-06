@@ -87,48 +87,22 @@ Note that in these functions we enumerate our variables from 1, that is we have 
 As we discussed above, parental assignments can be viewed as vectors and ordered lexicographically. This gives an enumeration of parent assignments e.g (1,1,1) is 1, (1,1,2) is 2 and so on. We will often move between parental assignments and their lexicographic enumeration within these functions (and the later preprocessing functions). We may also use the equivalent enumeration (1,1,1) is 0, (1,1,2) is 1 and so on. In certain cases, we may consider a restricted set of parental assignments, these can be put in lexicographic order and then enumerated sequentially and we may use this enumeration also (which will assign  values to assinments differently than the previous enumerations). These processes of enumeration can also be applied to outcomes viewed as vectors.
 
 ## Preprocessing Functions
+The `DQFunctions.cpp` gives the following functions which we use to apply and test preprocessing in our Chapter 3 experiments:
+```
+UvRemove(A, N, ENTRIES, BREAK, o1, o2)
+```
+This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?". These outcomes, o1 and o2, must be distinct.
 
-NumericalCheck(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
-checks the three initial condition
-false - any 1 of them holds
-true - none hold (need to answer DQ, MIGHT be true)
+The function removes all variables from the CP-net that are unimportant to the query in the manner we discuss in Chapter 3. Any variable that has a parent (or several) removed by this process has all remaining parents tested for degeneracy. Any degenerate parents are removed (that is, the parent-child edge is removed from the structure). The function then returns the reduced CP-net and dominance query
+```
+ConnectedComponents(A)
+```
+This function takes an adjacency matrix, A, which we assume to be acyclic. 
 
-ImpVar(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
-input DQ
-return a 0/1 vector of important variables
-if o1=o2, returns a vector of 2s
-
-Degenerate(IntegerVector NRed, IntegerVector ENTRIES)
-//NRed - vector giving the domain sizes of Xs parents in order, then the domain size of X
-  // ENTRIES - the CPT(X) section of the CP-net entries vector
-  //Returns -1 if CPT(X) is non degenerate
-  // Returns i (integer between 0 and |Pa| -1) giving the index of a degenerate parent (if CPT is degenerate)
-  //Note that if we return that i is a degenerate parent, this does not mean that there aren't more degenerate parents
-  
-how we determine degen (theoretically), tho some easy cases
-Parental asst enumeration - use partials to dtermine total
-
-not consistent re variable enumeration tho always have to convert back to 0 indexing
-
-RemovePa(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, int PA, int CH)
-PA-CH is a degenerate edge we remove
-PA, CH must be indexed from 0
-Again using parent lex encodings to identify the right rows to extract more easily and cyclicng through is easier
-have to upd entries and breaks at the end
-
-UvRemove(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
-removes the unimportant variables
-then, for all CPTs that could now have degenerate parents, identifies if there are any and removes them
-assumes o1, o2 distinct
-using lex calculations not explained fully to gen certain types of asst from partial assts
-
-ConnectedComponents(IntegerMatrix A)
-takes a adj matrix, assumed to be acyclic
-returns an integer #connected components
-if >1 then also a matrix with 0/1 vectors of connected components
-didnt really explain WHY this method gives the CC
-
-UVRSAndRPSDQRankPriority(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+The function obtains the connected components of A. It returns the number of connected components, k. If k>1, then it also returns a  kxn matrix (n=#variables), C. The ith row of C is a vector of 0s and 1s. the jth entry is 1 if and only if variable j is in the ith connected component. Note that there is no specific ordering of the connected components.
+```
+UVRSAndRPSDQRankPriority(A, N, ENTRIES, BREAK, o1, o2)
+```
   //checks Are applied and if found false, DQFALSE is returned with 0 outcomes considered and start
   //and end times
   //Otherwise, once reduced it is separated into connected components. 
@@ -166,6 +140,32 @@ CombAndRPSDQRankPriority(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES
 diff to algorithm - thesis remark - add comment in function?
 outputs same form as above
 uses numerical checks too 
-update ref-> paper!
 
-RPSDQRankPriorityTimed etc
+NumericalCheck(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+checks the three initial condition
+false - any 1 of them holds
+true - none hold (need to answer DQ, MIGHT be true)
+
+ImpVar(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+input DQ
+return a 0/1 vector of important variables
+if o1=o2, returns a vector of 2s
+
+Degenerate(IntegerVector NRed, IntegerVector ENTRIES)
+//NRed - vector giving the domain sizes of Xs parents in order, then the domain size of X
+  // ENTRIES - the CPT(X) section of the CP-net entries vector
+  //Returns -1 if CPT(X) is non degenerate
+  // Returns i (integer between 0 and |Pa| -1) giving the index of a degenerate parent (if CPT is degenerate)
+  //Note that if we return that i is a degenerate parent, this does not mean that there aren't more degenerate parents
+  
+how we determine degen (theoretically), tho some easy cases
+Parental asst enumeration - use partials to dtermine total
+
+not consistent re variable enumeration tho always have to convert back to 0 indexing
+
+RemovePa(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, int PA, int CH)
+PA-CH is a degenerate edge we remove
+PA, CH must be indexed from 0
+Again using parent lex encodings to identify the right rows to extract more easily and cyclicng through is easier
+have to upd entries and breaks at the end
+
