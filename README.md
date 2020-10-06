@@ -145,16 +145,24 @@ See thesis Chapter 3 experiments for explanation of outcomes traversed and reduc
 ```
 NumericalCheck(A, N, ENTRIES, BREAK, o1, o2)
 ```
-checks the three initial condition
-false - any 1 of them holds
-true - none hold (need to answer DQ, MIGHT be true)
+This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?".
 
-ImpVar(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
-input DQ
-return a 0/1 vector of important variables
-if o1=o2, returns a vector of 2s
+It checks the tree initial conditions:
+- Is o1=o2?
+- Is f(o2)<0? (f- penalty evaluation function)
+- Is r(o1)< r(o2) + L_D(o1,o2) ? (r -rank function, L_D - least rank difference function)
+See thesis Chapter 2 for further details of these checks.
 
-Degenerate(IntegerVector NRed, IntegerVector ENTRIES)
+If any of these conditions hold, then the input query is false and the function returns `false`. Otherwise it returns `true`. In this case, the dominance query still might be true but we will need to perform dominance testing to determine this.
+```
+ImpVar(A, N, ENTRIES, BREAK, o1, o2)
+```
+This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?".
+
+The function identifies which variables are important to this query. If o1 and o2 are distinct, then the function returns an n length vector (n - #variables) of 0s adn 1s. The ith entry is 1 if and only if variable i is important. If o1=o2 (no variables are important), the function returns an n length vector of 2s - necessary for its usage within other functions.
+```
+Degenerate(NRed, ENTRIES)
+```
 //NRed - vector giving the domain sizes of Xs parents in order, then the domain size of X
   // ENTRIES - the CPT(X) section of the CP-net entries vector
   //Returns -1 if CPT(X) is non degenerate
@@ -164,7 +172,6 @@ Degenerate(IntegerVector NRed, IntegerVector ENTRIES)
 how we determine degen (theoretically), tho some easy cases
 Parental asst enumeration - use partials to dtermine total
 
-not consistent re variable enumeration tho always have to convert back to 0 indexing
 
 RemovePa(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, int PA, int CH)
 PA-CH is a degenerate edge we remove
