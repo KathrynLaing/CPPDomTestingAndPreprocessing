@@ -117,14 +117,9 @@ ForwardPruning(A, N, ENTRIES, BREAK, o1, o2)
 ```
 This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?".
 
- ForwardPruning(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
-  //This function applies forward pruning. It then removes all size 1 variables and normalises the remaining domains so
-  //that they are back to being enumerated 1,2,3,..
-  //OUTPUTS: - If any domain goes to 0 (automatic false) then outputs the variable of interest and the Domains vector 
-  //(pruned up to that point)
-  // -OTHERWISEit outputs the pruned domains matrix, the reduced (pruned, normalised, degeneracies rmvd) CPN and assoc reduced DQ
-  
-ForwardPruning(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+It applies forward pruning alonside numerical checks to the query as we describe in Chapter 3 (including the removal of variables with only 1 remaining value and degenerate edges). If forward pruning finds the query false, the function returns the index which had its domain pruned entirely and a matrix giving the pruned domains (up to the point of termination) of the variables. If forward pruning does not answer the query (find it false), then it returns a matrix giving the pruned domains of each variable and the reduced CP-net and query produced by forward pruning.
+
+
 Mention WHY we have to normalise and get rid of 1 value variables
 output formats...
 
