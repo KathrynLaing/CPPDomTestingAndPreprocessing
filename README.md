@@ -109,7 +109,7 @@ This function applies UVRS preprocessing to the dominance query alongside numeri
 
 If the query is answered at some point during preprocessing, the function terminates and returns the answer of the dominance query (true/false), the number of outcomes considered (0), and the timestamps of the start and end of the function.
 
-If the query is answered by preprocessing, the function returns the answer of the dominance query (true/false), the number of outcomes considered in dominance testing, the timestamps of the start of the function, end of preprocessing, and end of the function, and also the number of outcomes in the UVRS reduced CP-net(s).
+If the query is not answered by preprocessing, the function returns the answer of the dominance query (true/false), the number of outcomes considered in dominance testing, the timestamps of the start of the function, end of preprocessing, and end of the function, and also the number of outcomes in the UVRS reduced CP-net(s).
 
 See thesis Chapter 3 experiments for explanation of outcomes traversed and reduced CP-net #outcomes calculations.
 ```
@@ -118,22 +118,33 @@ ForwardPruning(A, N, ENTRIES, BREAK, o1, o2)
 This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?".
 
 It applies forward pruning alonside numerical checks to the query as we describe in Chapter 3 (including the removal of variables with only 1 remaining value and degenerate edges). If forward pruning finds the query false, the function returns the index which had its domain pruned entirely and a matrix giving the pruned domains (up to the point of termination) of the variables. If forward pruning does not answer the query (find it false), then it returns a matrix giving the pruned domains of each variable and the reduced CP-net and query produced by forward pruning.
+```
+FPAndRPSDQRankPriority(A, N, ENTRIES, BREAK, o1, o2)
+```
+This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?".
 
+This function applies forward pruning preprocessing to the dominance query alongside numerical checks, as described in the thesis Chapter 3 experiments. If the preprocessing does not answer the query, it uses function RPSDQRankPriority to answer the reduced dominance query.
 
-Mention WHY we have to normalise and get rid of 1 value variables
-output formats...
+If the query is answered at some point during preprocessing, the function terminates and returns the answer of the dominance query (true/false), the number of outcomes considered (0), and the timestamps of the start and end of the function.
 
-FPAndRPSDQRankPriority(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
-applies FP, answers queries
-outputs formated akin to ForwardPruning
-applying FP with numerical checks, as in thesis. Outcomes considered etc. defined as in thesis
+If the query is not answered by preprocessing, the function returns the answer of the dominance query (true/false), the number of outcomes considered in dominance testing, the timestamps of the start of the function, end of preprocessing, and end of the function, and also the number of outcomes in the forward pruning reduced CP-net.
 
-CombAndRPSDQRankPriority(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
-diff to algorithm - thesis remark - add comment in function?
-outputs same form as above
-uses numerical checks too 
+See thesis Chapter 3 experiments for explanation of outcomes traversed and reduced CP-net #outcomes calculations.
+```
+CombAndRPSDQRankPriority(A, N, ENTRIES, BREAK, o1, o2)
+```
+This function takes a CP-net and two outcomes - i.e. the dominance query "Is `o1` preferred to `o2`?".
 
-NumericalCheck(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2)
+This function applies the combined UVRS and forward pruning preprocessing to the dominance query alongside numerical checks, as described in the thesis Chapter 3 experiments (see remark on page 122 about the distinction between this code and the algorithm presented). If the preprocessing does not answer the query, it uses function RPSDQRankPriority to answer the reduced dominance query. If there are multiple reduced queries, then they are answered in increasing order of their corresponding #variables until an answer to the original query is found. 
+
+If the query is answered at some point during preprocessing, the function terminates and returns the answer of the dominance query (true/false), the number of outcomes considered (0), and the timestamps of the start and end of the function.
+
+If the query is not answered by preprocessing, the function returns the answer of the dominance query (true/false), the number of outcomes considered in dominance testing, the timestamps of the start of the function, end of preprocessing, and end of the function, and also the number of outcomes in the reduced CP-net(s).
+
+See thesis Chapter 3 experiments for explanation of outcomes traversed and reduced CP-net #outcomes calculations.
+```
+NumericalCheck(A, N, ENTRIES, BREAK, o1, o2)
+```
 checks the three initial condition
 false - any 1 of them holds
 true - none hold (need to answer DQ, MIGHT be true)
@@ -161,3 +172,4 @@ PA, CH must be indexed from 0
 Again using parent lex encodings to identify the right rows to extract more easily and cyclicng through is easier
 have to upd entries and breaks at the end
 
+Mention WHY we have to normalise and get rid of 1 value variables
