@@ -82,10 +82,9 @@ RankDifferences(A, N, ENTRIES, BREAK)
 
 `RankDifferences` takes a CP-net as input. It returns an n length vector (n=#variables). The ith element of this vector is the least rank improvement of variable i, L(i) (see thesis, section 2.4.1 for details).
 
-enumeration from 1 domains, variables
+Note that in these functions we enumerate our variables from 1, that is we have variables {1,2,...,n} and similarly, the domain of variable X is {1,2,...,|Dom(X)|}. In some cases we may use enumeration from 0 ({0,1,...,n-1}) for calculation convenience within the structure.
 
-lexicographic parent assts
-parental lex enumerations actually the same.... No its weird. Made to start at 1.. make sure other repo starts at 0 in example, weird conversion  
+As we discussed above, parental assignments can be viewed as vectors and ordered lexicographically. This gives an enumeration of parent assignments e.g (1,1,1) is 1, (1,1,2) is 2 and so on. We will often move between parental assignments and their lexicographic enumeration within these functions (and the later preprocessing functions). We may also use the equivalent enumeration (1,1,1) is 0, (1,1,2) is 1 and so on. In certain cases, we may consider a restricted set of parental assignments, these can be put in lexicographic order and then enumerated sequentially and we may use this enumeration also (which will assign  values to assinments differently than the previous enumerations). These processes of enumeration can also be applied to outcomes viewed as vectors.
 
 ## Preprocessing Functions
 
