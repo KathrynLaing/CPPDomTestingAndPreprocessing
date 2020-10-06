@@ -5101,8 +5101,8 @@ List ForwardPruning(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, Int
   //Input CP-net and dominance query (o1>o2?)
   //Assume that o1=/=o2
   //Function applies forward pruning to this query as described in my thesis
-  //If forward pruning answers the query by reducing a variable domain to 0 - output variable of interest and pruned domain size vector
-  //Otherwise, the pruned domain size vector and reduced CP-net and query are output
+  //If forward pruning answers the query by reducing a variable domain to 0 - output variable of interest and pruned domains matrix
+  //Otherwise, the pruned domains matrix and reduced CP-net and query are output
   //n-number of variables
   int n=A.nrow();
   //NAnce - #ancestors for each variable. Calculated in the same way as rank function does
@@ -5829,7 +5829,7 @@ List FPAndRPSDQRankPriority(IntegerMatrix A, IntegerVector N, IntegerVector ENTR
 // [[Rcpp::export]]
 List CombAndRPSDQRankPriority(IntegerMatrix A, IntegerVector N, IntegerVector ENTRIES, IntegerVector BREAK, IntegerVector o1, IntegerVector o2){
   //input - CP-net and dominance query
-  //Function applies the combination of UVRS and Forward pruning (described in the thesis) to the query
+  //Function applies the combination of UVRS and Forward pruning (described in the thesis, see page 122 remark about the distinction between this code and the algorithm presented) to the query
   //If this preprocessing results in reduced queries, we answer these in size order using rank pruning, penalty pruning and suffix fixing with rank priority
   //Returns the answer of the original query, the number of outcomes considered and the following timestamps
   //start and end of function if the query is answered via preprocessing
